@@ -7,13 +7,15 @@ struct ContentView: View {
         HStack {
             FaceOverlay()
                 .ignoresSafeArea()
-        }
-
-//        Canvas(image: $canvasImage)
-//            .frame(width: 300, height: 300)
-//            .border(Color.black, width: 1)
-        Button("Save") {
-            canvasImage = nil // Clear the previous image
+            VStack {
+                Canvas(image: $canvasImage)
+                    .frame(width: 300, height: 300)
+                    .border(Color.black, width: 1)
+                Button("Save") {
+                    canvasImage = nil // Clear the previous image
+                }
+            }
+            Game()
         }
     }
 }

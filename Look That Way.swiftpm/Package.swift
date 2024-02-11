@@ -8,13 +8,13 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "My App",
+    name: "Look That Way!",
     platforms: [
         .iOS("17.0")
     ],
     products: [
         .iOSApplication(
-            name: "My App",
+            name: "Look That Way!",
             targets: ["AppModule"],
             bundleIdentifier: "com.masakaz.lookthatway",
             teamIdentifier: "7R974FN29R",
@@ -27,10 +27,8 @@ let package = Package(
                 .phone
             ],
             supportedInterfaceOrientations: [
-                .portrait,
                 .landscapeRight,
-                .landscapeLeft,
-                .portraitUpsideDown(.when(deviceFamilies: [.pad]))
+                .landscapeLeft
             ],
             capabilities: [
                 .camera(purposeString: "Use camera to mapping your face.")
