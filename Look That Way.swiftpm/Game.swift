@@ -8,25 +8,25 @@
 import SwiftUI
 
 struct Game: View {
-    @Environment(AppState.self) private var appState
+    var appState: AppState
 
     var body: some View {
         VStack {
-            Points()
+            Points(appState: appState)
                 .environment(appState)
             Spacer()
             appState.cpuFaceDirection.faceImage
-            FingerControl()
+            FingerControl(appState: appState)
         }
     }
 }
 
 #Preview {
-    Game()
+    Game(appState: .init())
 }
 
 struct Points: View {
-    @Environment(AppState.self) private var appState
+    var appState: AppState
     var body: some View {
         HStack {
             VStack {
@@ -43,11 +43,11 @@ struct Points: View {
 }
 
 struct FingerControl: View {
-    @Environment(AppState.self) private var appState
+    var appState: AppState
     var body: some View {
         VStack {
             Button {
-                appState.userSelectedFaceDirection = .up
+                appState.userCurrentFaceDirection = .up
                 appState.match(.up)
             } label: {
                 Text("👆")
@@ -55,7 +55,7 @@ struct FingerControl: View {
             }
             HStack {
                 Button {
-                    appState.userSelectedFaceDirection = .left
+                    appState.userCurrentFaceDirection = .left
                     appState.match(.left)
 
                 } label: {
@@ -64,7 +64,7 @@ struct FingerControl: View {
                 }
                 //Button as a Space
                 Button {
-                    appState.userSelectedFaceDirection = .up
+                    appState.userCurrentFaceDirection = .up
                     appState.match(.up)
                 } label: {
                     Text("👆")
@@ -73,7 +73,7 @@ struct FingerControl: View {
                 .opacity(0)
                 .disabled(true)
                 Button {
-                    appState.userSelectedFaceDirection = .right
+                    appState.userCurrentFaceDirection = .right
                     appState.match(.right)
                 } label: {
                     Text("👉")
@@ -81,7 +81,7 @@ struct FingerControl: View {
                 }
             }
             Button {
-                appState.userSelectedFaceDirection = .down
+                appState.userCurrentFaceDirection = .down
                 appState.match(.down)
             } label: {
                 Text("👇")

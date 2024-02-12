@@ -1,21 +1,25 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(AppState.self) private var appState
+    var appState: AppState
     @State private var canvasImage: UIImage?
     var body: some View {
         HStack {
-            FaceOverlay()
+            FaceOverlay(appState: appState)
                 .ignoresSafeArea()
             VStack {
+                appState.userCurrentFaceDirection.fingerText
                 Canvas(image: $canvasImage)
                     .frame(width: 300, height: 300)
                     .border(Color.black, width: 1)
                 Button("Save") {
                     canvasImage = nil // Clear the previous image
                 }
+                Button("Re-Center") {
+                    appState.shouldSetInitialFaceAngle = true
+                }
             }
-            Game()
+            Game(appState: appState)
         }
     }
 }

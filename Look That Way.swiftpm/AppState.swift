@@ -13,7 +13,6 @@ class AppState {
     var cpuPoint: Int = 0
     var cpuMaskImage: UIImage = .init()
 
-    var userSelectedFaceDirection: FaceDirection = .front
     var userPoint: Int = 0
     var userMaskImage: UIImage = .init()
     var userDrawing:Bool = false {
@@ -23,6 +22,10 @@ class AppState {
             }
         }
     }
+//: MARK: - FaceOverlayState
+    var shouldSetInitialFaceAngle = false
+    var faceDetected = false
+    var userCurrentFaceDirection: FaceDirection = .front
 
     func match(_ userFaceDirection: FaceDirection) {
         let newCpuFaceDirection = FaceDirection.random()
