@@ -4,22 +4,42 @@ struct ContentView: View {
     var appState: AppState
     @State private var canvasImage: UIImage?
     var body: some View {
-        HStack {
-            FaceOverlay(appState: appState)
-                .ignoresSafeArea()
-            VStack {
-                appState.userCurrentFaceDirection.fingerText
-                Canvas(image: $canvasImage)
-                    .frame(width: 300, height: 300)
-                    .border(Color.black, width: 1)
-                Button("Save") {
-                    canvasImage = nil // Clear the previous image
-                }
+        VStack {
+            appState.userCurrentFaceDirection.faceImage
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 100)
+            Group {
+                FaceOverlay(appState: appState)
+                    .ignoresSafeArea()
                 Button("Re-Center") {
                     appState.shouldSetInitialFaceAngle = true
                 }
+
+                Button("Start") {
+                    appState.resetAndStart()
+                }
             }
-            Game(appState: appState)
+            HStack {
+                ForEach(appState.cpuFaceDirections, id: \.self) { direction in
+                    direction.faceImage
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                }
+
+                //                Canvas(image: $canvasImage)
+                //                    .frame(width: 300, height: 300)
+                //                    .border(Color.black, width: 1)
+
+            }
+            Text("\(appState.matchNumber)")
+                .font(.largeTitle)
+                .bold()
+            HStack {
+                Text("HP \(appState.userHP)")
+                Text("Point: \(appState.userPoint)")
+            }
         }
     }
 }
@@ -62,6 +82,10 @@ enum FaceDirection: CaseIterable {
     }
 
     static func random() -> FaceDirection {
-            return FaceDirection.allCases.randomElement()!
+        return FaceDirection.allCases.randomElement()!
     }
+    static func randomExcludingFront() -> FaceDirection {
+            let excludingFront = FaceDirection.allCases.filter { $0 != .front }
+            return excludingFront.randomElement()!
+        }
 }
