@@ -18,8 +18,21 @@ struct ContentView: View {
 
                 Button("Start") {
                     appState.resetAndStart()
+                    SoundManager.shared.playSound(name: "start")
                 }
             }
+            if let countdown = appState.countdown {
+//                Gauge(value: Double(countdown.remainingTime), in: 0...countdown.totalTime) {
+//                    Text("Remaining Time:")
+//                } currentValueLabel: {
+//                    Text("\(countdown.remainingTime)s")
+//                }
+//                .gaugeStyle(.accessoryCircularCapacity)
+//                .tint(.blue) // カスタムカラー
+//                .scaleEffect(1.5) // サイズ調整
+                CountdownGauge(countDown: countdown)
+            }
+
             HStack {
                 ForEach(appState.cpuFaceDirections, id: \.self) { direction in
                     direction.faceImage
@@ -38,8 +51,16 @@ struct ContentView: View {
                 .bold()
             HStack {
                 Text("HP \(appState.userHP)")
+                HPGauge(hp: appState.userHP)
+                Spacer()
                 Text("Point: \(appState.userPoint)")
             }
+        }
+        .onAppear {
+            SoundManager.shared.playBGM()
+        }
+        .onDisappear {
+            SoundManager.shared.stopBGM()
         }
     }
 }
