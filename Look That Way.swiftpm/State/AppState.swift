@@ -56,8 +56,7 @@ class AppState {
         }
         (targetFaceDirection, matchNumber) = findTargetFaceDirection(cpuDirections)
 
-        countdown = CountdownTimer(duration: max(1.3, 3 - log(Double(userPoint)+1)))
-        print("duration:\(max(1.5, 3 - log(Double(userPoint)+1)))")
+        countdown = CountdownTimer(duration: 4.0)
         countdown?.onFinish = { [weak self] in
             self?.judge()
         }

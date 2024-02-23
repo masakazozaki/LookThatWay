@@ -1,8 +1,9 @@
 {
   "data" : [
     {
-      "filename" : "sakurasakura.m4a",
-      "idiom" : "universal"
+      "filename" : "My Song 12.m4a",
+      "idiom" : "universal",
+      "universal-type-identifier" : "com.apple.m4a-audio"
     }
   ],
   "info" : {

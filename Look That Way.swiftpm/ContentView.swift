@@ -32,27 +32,16 @@ struct ContentView: View {
                 }
 
             }
-            appState.userCurrentFaceDirection.faceImage
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)
-//            FaceView(faceDirection: appState.userCurrentFaceDirection, isHighlighted: $tmpHighlighted)
+            FaceView(appState: appState, cpuIndex: 5)
             if let countdown = appState.countdown {
                 CountdownGauge(countDown: countdown)
             }
             HStack {
-                ForEach(appState.cpuFaceDirections, id: \.self) { direction in
-//                    FaceView(faceDirection: direction, isHighlighted: $tmpHighlighted)
-                    direction.faceImage
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 100)
-                }
-
-                //                Canvas(image: $canvasImage)
-                //                    .frame(width: 300, height: 300)
-                //                    .border(Color.black, width: 1)
-
+                FaceView(appState: appState, cpuIndex: 0)
+                FaceView(appState: appState, cpuIndex: 1)
+                FaceView(appState: appState, cpuIndex: 2)
+                FaceView(appState: appState, cpuIndex: 3)
+                FaceView(appState: appState, cpuIndex: 4)
             }
             Text("\(appState.matchNumber)")
                 .font(.largeTitle)
@@ -80,7 +69,6 @@ struct ContentView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                 }
             }
-
         }
         .onAppear {
             SoundManager.shared.playInitialBGM()
@@ -97,51 +85,5 @@ struct ContentView: View {
         .sheet(isPresented: $isPresentingResultView) {
             ResultView(appState: appState)
         }
-    }
-}
-
-enum FaceDirection: CaseIterable {
-    case front
-    case up
-    case down
-    case left
-    case right
-
-    var faceImage: Image {
-        switch self {
-        case .front:
-            Image("front")
-        case .up:
-            Image("up")
-        case .down:
-            Image("down")
-        case .left:
-            Image("left")
-        case .right:
-            Image("right")
-        }
-    }
-
-    var fingerText: Text {
-        switch self {
-        case .front:
-            Text("🫵")
-        case .up:
-            Text("👆")
-        case .down:
-            Text("👇")
-        case .left:
-            Text("👈")
-        case .right:
-            Text("👉")
-        }
-    }
-
-    static func random() -> FaceDirection {
-        return FaceDirection.allCases.randomElement()!
-    }
-    static func randomExcludingFront() -> FaceDirection {
-        let excludingFront = FaceDirection.allCases.filter { $0 != .front }
-        return excludingFront.randomElement()!
     }
 }
