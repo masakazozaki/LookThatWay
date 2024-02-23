@@ -2,13 +2,10 @@ import SwiftUI
 
 struct ContentView: View {
     var appState: AppState
+    @State var isPresentingResultView = false
     @State private var canvasImage: UIImage?
     var body: some View {
         VStack {
-            appState.userCurrentFaceDirection.faceImage
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)
             Group {
                 FaceOverlay(appState: appState)
                     .ignoresSafeArea()
@@ -19,20 +16,16 @@ struct ContentView: View {
                 Button("Start") {
                     appState.resetAndStart()
                     SoundManager.shared.playSound(name: "start")
+                    SoundManager.shared.playGameBGM()
                 }
             }
+            appState.userCurrentFaceDirection.faceImage
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 100)
             if let countdown = appState.countdown {
-//                Gauge(value: Double(countdown.remainingTime), in: 0...countdown.totalTime) {
-//                    Text("Remaining Time:")
-//                } currentValueLabel: {
-//                    Text("\(countdown.remainingTime)s")
-//                }
-//                .gaugeStyle(.accessoryCircularCapacity)
-//                .tint(.blue) // カスタムカラー
-//                .scaleEffect(1.5) // サイズ調整
                 CountdownGauge(countDown: countdown)
             }
-
             HStack {
                 ForEach(appState.cpuFaceDirections, id: \.self) { direction in
                     direction.faceImage
@@ -51,16 +44,28 @@ struct ContentView: View {
                 .bold()
             HStack {
                 Text("HP \(appState.userHP)")
+                    .font(.headline)
                 HPGauge(hp: appState.userHP)
                 Spacer()
                 Text("Point: \(appState.userPoint)")
+                    .font(.headline)
             }
+            .padding()
         }
         .onAppear {
-            SoundManager.shared.playBGM()
+            SoundManager.shared.playInitialBGM()
         }
         .onDisappear {
             SoundManager.shared.stopBGM()
+        }
+        .onChange(of: appState.userHP) {
+            if appState.userHP == 0 {
+                isPresentingResultView = true
+                SoundManager.shared.playInitialBGM()
+            }
+        }
+        .sheet(isPresented: $isPresentingResultView) {
+            ResultView(appState: appState)
         }
     }
 }

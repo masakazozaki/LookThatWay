@@ -29,7 +29,22 @@ struct CountdownGauge: View {
 
         // 中央からの距離に応じてアクティブか判断 (左右対称)
         let distanceFromCenter = abs(position - 3)
-        return distanceFromCenter < activeCircles / 2 ? .yellow : .gray
+        return distanceFromCenter < activeCircles / 2 ? activeColor(progress: progress) : .gray
+    }
+
+    private func activeColor(progress: Double) -> Color {
+        switch progress {
+        case 0..<0.25:
+            return .red
+        case 0.25..<0.5:
+            return .red
+        case 0.5..<0.75:
+            return .yellow
+        case 0.75...1:
+            return .green
+        default:
+            return .green
+        }
     }
 
     var body: some View {
@@ -38,7 +53,6 @@ struct CountdownGauge: View {
                 Circle()
                     .fill(circleColor(for: index))
                     .frame(width: 20, height: 20)
-                    .shadow(color: circleColor(for: index) == .yellow ? .yellow : .clear, radius: 10)
             }
         }
     }

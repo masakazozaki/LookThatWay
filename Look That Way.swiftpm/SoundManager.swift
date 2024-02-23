@@ -23,18 +23,32 @@ class SoundManager {
         }
     }
 
-    func playBGM() {
-        if let bgmAsset = NSDataAsset(name: "sakurasakura") {
+    func playInitialBGM() {
+        if let bgmAsset = NSDataAsset(name: "harunoumi") {
             do {
+                bgmPlayer?.stop()
                 bgmPlayer = try AVAudioPlayer(data: bgmAsset.data)
-                bgmPlayer?.numberOfLoops = -1 // 無限ループ
+                bgmPlayer?.numberOfLoops = -1
                 bgmPlayer?.volume = 0.05
                 bgmPlayer?.play()
             } catch {
                 print("BGMの再生に失敗しました。", error)
             }
         }
+    }
 
+    func playGameBGM() {
+        if let bgmAsset = NSDataAsset(name: "sakurasakura") {
+            do {
+                bgmPlayer?.stop()
+                bgmPlayer = try AVAudioPlayer(data: bgmAsset.data)
+                bgmPlayer?.numberOfLoops = -1
+                bgmPlayer?.volume = 0.05
+                bgmPlayer?.play()
+            } catch {
+                print("BGMの再生に失敗しました。", error)
+            }
+        }
     }
 
     func stopBGM() {

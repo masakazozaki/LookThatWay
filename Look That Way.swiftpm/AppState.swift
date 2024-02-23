@@ -35,7 +35,8 @@ class AppState {
         var cpuDirections: [FaceDirection] = (1...5).map { _ in FaceDirection.randomExcludingFront() }
         (targetFaceDirection, matchNumber) = findTargetFaceDirection(cpuDirections)
 
-        countdown = CountdownTimer(duration: max(1.3, 3 - Double(userPoint) / 5))
+        countdown = CountdownTimer(duration: max(1.3, 3 - log(Double(userPoint)+1)))
+        print("duration:\(max(1.3, 3 - log(Double(userPoint)+1)))")
         countdown?.onFinish = { [weak self] in
             self?.judge()
         }
@@ -71,7 +72,9 @@ class AppState {
             SoundManager.shared.playSound(name: "incorrect")
         }
         if userHP > 0 {
-            match()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.match()
+            }
         } else {
             SoundManager.shared.playSound(name: "result")
         }

@@ -28,11 +28,6 @@ class FaceOverlayView: UIView, ARSCNViewDelegate {
     var initialYaw: Float = 0
     var initialPitch: Float = 0
 
-    private var calibrateButton = UIButton()
-
-    private var currentAngleLabel = UILabel()
-
-
     init(appState: AppState) {
         self.appState = appState
         super.init(frame: .zero)
@@ -114,39 +109,26 @@ class FaceOverlayView: UIView, ARSCNViewDelegate {
 
         let deltaYaw = yaw - initialYaw
         let deltaPitch = pitch - initialPitch
-        print(deltaPitch, "pitch up down")
-        print(deltaYaw, "yaw LR")
-
         // 絶対値が大きい方の変化を判断
         if abs(deltaYaw) > abs(deltaPitch) {
             // Yawの変化が大きい場合
             if deltaYaw > 0.2 {
                 appState.userCurrentFaceDirection = .left
-                currentAngleLabel.text = "👈"
-                print("顔は左を向いています")
             } else if deltaYaw < -0.2 {
                 appState.userCurrentFaceDirection = .right
-                currentAngleLabel.text = "👉"
-                print("顔は右を向いています")
             }
         } else {
             // Pitchの変化が大きい場合
             if deltaPitch > 0.2 {
                 appState.userCurrentFaceDirection = .up
-                currentAngleLabel.text = "☝️"
-                print("顔は上を向いています")
             } else if deltaPitch < -0.2 {
                 appState.userCurrentFaceDirection = .down
-                currentAngleLabel.text = "👇"
-                print("顔は下を向いています")
             }
         }
 
         // どちらの変化も小さい場合は正面を向いていると判断
         if abs(deltaYaw) <= 0.2 && abs(deltaPitch) <= 0.2 {
             appState.userCurrentFaceDirection = .front
-            currentAngleLabel.text = "🫵"
-            print("顔は正面を向いています")
         }
     }
 
