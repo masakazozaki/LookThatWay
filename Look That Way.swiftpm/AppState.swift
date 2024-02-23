@@ -32,11 +32,29 @@ class AppState {
     var userCurrentFaceDirection: FaceDirection = .front
 
     private func match() {
-        var cpuDirections: [FaceDirection] = (1...5).map { _ in FaceDirection.randomExcludingFront() }
+        var cpuDirections: [FaceDirection]
+        switch userPoint {
+        case 0:
+            //easy
+            cpuDirections = [.down, .down, .up, .down, .down]
+        case 1:
+            //easy
+            cpuDirections = [.up, .up, .left, .left, .left]
+        case 2:
+            //mid
+            cpuDirections = [.right, .up, .up, .down, .down]
+        case 3:
+            //easy
+            cpuDirections = [.right, .left, .left, .left, .right]
+        case 4:
+            cpuDirections = [.up, .up, .up, .up, .up]
+        default:
+            cpuDirections = (1...5).map { _ in FaceDirection.randomExcludingFront() }
+        }
         (targetFaceDirection, matchNumber) = findTargetFaceDirection(cpuDirections)
 
         countdown = CountdownTimer(duration: max(1.3, 3 - log(Double(userPoint)+1)))
-        print("duration:\(max(1.3, 3 - log(Double(userPoint)+1)))")
+        print("duration:\(max(1.5, 3 - log(Double(userPoint)+1)))")
         countdown?.onFinish = { [weak self] in
             self?.judge()
         }
