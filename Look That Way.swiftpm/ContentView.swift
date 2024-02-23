@@ -4,30 +4,45 @@ struct ContentView: View {
     var appState: AppState
     @State var isPresentingResultView = false
     @State private var canvasImage: UIImage?
+    @State private var tmpHighlighted = false
     var body: some View {
         VStack {
             Group {
-                FaceOverlay(appState: appState)
-                    .ignoresSafeArea()
-                Button("Re-Center") {
-                    appState.shouldSetInitialFaceAngle = true
+                ZStack {
+                    HStack {
+                        Spacer()
+                        FaceOverlay(appState: appState)
+                            .aspectRatio(1, contentMode: .fit)
+                            .ignoresSafeArea()
+                        Spacer()
+                    }
+                    HStack {
+                        Spacer()
+                        Button {
+                            appState.shouldSetInitialFaceAngle = true
+                        } label: {
+                            Text("Re-Center")
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                                .padding()
+                                .background(.cyan)
+                                .clipShape(RoundedRectangle(cornerRadius: 24))
+                        }
+                    }
                 }
 
-                Button("Start") {
-                    appState.resetAndStart()
-                    SoundManager.shared.playSound(name: "start")
-                    SoundManager.shared.playGameBGM()
-                }
             }
             appState.userCurrentFaceDirection.faceImage
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
+//            FaceView(faceDirection: appState.userCurrentFaceDirection, isHighlighted: $tmpHighlighted)
             if let countdown = appState.countdown {
                 CountdownGauge(countDown: countdown)
             }
             HStack {
                 ForEach(appState.cpuFaceDirections, id: \.self) { direction in
+//                    FaceView(faceDirection: direction, isHighlighted: $tmpHighlighted)
                     direction.faceImage
                         .resizable()
                         .scaledToFit()
@@ -42,15 +57,30 @@ struct ContentView: View {
             Text("\(appState.matchNumber)")
                 .font(.largeTitle)
                 .bold()
-            HStack {
-                Text("HP \(appState.userHP)")
-                    .font(.headline)
-                HPGauge(hp: appState.userHP)
-                Spacer()
-                Text("Point: \(appState.userPoint)")
-                    .font(.headline)
+            ZStack {
+                HStack {
+                    Text("HP \(appState.userHP)")
+                        .font(.headline)
+                    HPGauge(hp: appState.userHP)
+                    Spacer()
+                    Text("Point: \(appState.userPoint)")
+                        .font(.headline)
+                }
+                .padding()
+                Button {
+                    appState.resetAndStart()
+                    SoundManager.shared.playSound(name: "start")
+                    SoundManager.shared.playGameBGM()
+                } label : {
+                    Text("Start")
+                        .font(.largeTitle)
+                        .foregroundStyle(.white)
+                        .padding()
+                        .background(.green)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                }
             }
-            .padding()
+
         }
         .onAppear {
             SoundManager.shared.playInitialBGM()
@@ -111,7 +141,7 @@ enum FaceDirection: CaseIterable {
         return FaceDirection.allCases.randomElement()!
     }
     static func randomExcludingFront() -> FaceDirection {
-            let excludingFront = FaceDirection.allCases.filter { $0 != .front }
-            return excludingFront.randomElement()!
-        }
+        let excludingFront = FaceDirection.allCases.filter { $0 != .front }
+        return excludingFront.randomElement()!
+    }
 }

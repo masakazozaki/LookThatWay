@@ -26,6 +26,9 @@ class AppState {
             }
         }
     }
+
+    var userPitch: Double = 0
+    var userYaw: Double = 0
 //: MARK: - FaceOverlayState
     var shouldSetInitialFaceAngle = false
     var faceDetected = false
