@@ -9,50 +9,61 @@ import SwiftUI
 
 struct CountdownGauge: View {
     var countDown: CountdownTimer
+    @State private var isBlinking = false
 
-    private func circleColor(for position: Int) -> Color {
-        let progress = Double(countDown.remainingTime) / Double(countDown.totalTime)
-        let activeCircles: Int
-
-        switch progress {
-        case 0..<0.25:
-            activeCircles = 0
-        case 0.25..<0.5:
-            activeCircles = 2 // 中央の四つのうち外側の二つ
-        case 0.5..<0.75:
-            activeCircles = 4 // 中央の四つ
-        case 0.75...1:
-            activeCircles = 6 // 全部
-        default:
-            activeCircles = 0
-        }
-
-        // 中央からの距離に応じてアクティブか判断 (左右対称)
-        let distanceFromCenter = abs(position - 3)
-        return distanceFromCenter < activeCircles / 2 ? activeColor(progress: progress) : .gray
+    private func progress() -> CGFloat {
+        CGFloat(countDown.remainingTime) / CGFloat(countDown.totalTime)
     }
 
-    private func activeColor(progress: Double) -> Color {
-        switch progress {
-        case 0..<0.25:
+    private func lampColor() -> Color {
+        let progressValue = progress()
+        switch progressValue {
+        case 0..<0.3:
             return .red
-        case 0.25..<0.5:
-            return .red
-        case 0.5..<0.75:
+        case 0.3..<0.5:
             return .yellow
-        case 0.75...1:
+        case 0.5...1:
             return .green
         default:
             return .green
         }
+    }
+
+    private func startBlinking() {
+        guard progress() <= 0.25 else {
+            isBlinking = false
+            return
+        }
+        if progress() <= 0.0 {
+            isBlinking = false
+            return
+        }
+        isBlinking = true
     }
 
     var body: some View {
-        HStack {
-            ForEach(0...6, id: \.self) { index in
-                Circle()
-                    .fill(circleColor(for: index))
-                    .frame(width: 20, height: 20)
+        GeometryReader { geometry in
+            HStack {
+                Spacer()
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(lampColor())
+                        .frame(width: max(geometry.size.width * progress() * 0.9, 0), height: 16)
+                    Circle()
+                        .fill(isBlinking ? .white : lampColor())
+                        .frame(width: 32, height: 32)
+                        .overlay(
+                            Circle()
+                                .stroke(.white, lineWidth: 4)
+                        )
+                        .animation(isBlinking ? .easeInOut(duration: 0.2).repeatForever(autoreverses: true) : .default, value: isBlinking)
+
+                }
+                Spacer()
+            }
+
+            .onChange(of: countDown.remainingTime) {
+                startBlinking()
             }
         }
     }
