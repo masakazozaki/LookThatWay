@@ -34,15 +34,23 @@ class AppState {
     var shouldSetInitialFaceAngle = false
     var faceDetected = false
     var userCurrentFaceDirection: FaceDirection = .front
+    var targetMatchDuration = 3.0
     private func match() {
         if history.isEmpty {
             SoundManager.shared.playGameBGM(rate: 1.0)
+            targetMatchDuration = 4.0
         } else if userPoint == 3 {
-            SoundManager.shared.playGameBGM(rate: 1.2)
-        } else if userPoint == 6 {
             SoundManager.shared.playGameBGM(rate: 1.5)
-        } else if userPoint == 10 {
+            targetMatchDuration = 3.0
+        } else if userPoint == 6 {
             SoundManager.shared.playGameBGM(rate: 2.0)
+            targetMatchDuration = 2.0
+        } else if userPoint == 10 {
+            SoundManager.shared.playGameBGM(rate: 2.5)
+            targetMatchDuration = 1.6
+        } else if userPoint == 15 {
+            SoundManager.shared.playGameBGM(rate: 3.0)
+            targetMatchDuration = 1.2
         }
 
         isMatching = true
@@ -68,7 +76,7 @@ class AppState {
         }
         (targetFaceDirection, matchNumber) = findTargetFaceDirection(cpuDirections)
 
-        countdown = CountdownTimer(duration: 4.0)
+        countdown = CountdownTimer(duration: targetMatchDuration)
         countdown?.onFinish = { [weak self] in
             self?.judge()
         }
