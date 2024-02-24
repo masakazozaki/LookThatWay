@@ -14,6 +14,7 @@ struct FaceView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> SCNView {
         let scnView = SCNView()
+        scnView.backgroundColor = UIColor.clear
         scnView.scene = SCNScene(named: "Face_scn.scn")!
         scnView.autoenablesDefaultLighting = true
         return scnView

@@ -15,6 +15,9 @@ class AppState {
     var matchNumber: Int = 0
     var targetFaceDirection: FaceDirection = .front
 
+    var isMatching = false
+    var history = [Bool]()
+
     var countdown: CountdownTimer?
 
     var userPoint: Int = 0
@@ -27,14 +30,23 @@ class AppState {
         }
     }
 
-    var userPitch: Double = 0
-    var userYaw: Double = 0
 //: MARK: - FaceOverlayState
     var shouldSetInitialFaceAngle = false
     var faceDetected = false
     var userCurrentFaceDirection: FaceDirection = .front
-
     private func match() {
+        if history.isEmpty {
+            SoundManager.shared.playGameBGM(rate: 1.0)
+        } else if userPoint == 3 {
+            SoundManager.shared.playGameBGM(rate: 1.2)
+        } else if userPoint == 6 {
+            SoundManager.shared.playGameBGM(rate: 1.5)
+        } else if userPoint == 10 {
+            SoundManager.shared.playGameBGM(rate: 2.0)
+        }
+
+        isMatching = true
+        SoundManager.shared.playSound(name: "next")
         var cpuDirections: [FaceDirection]
         switch userPoint {
         case 0:
@@ -84,15 +96,18 @@ class AppState {
 
     func judge() {
         print("judge")
+        isMatching = false
         if userCurrentFaceDirection == targetFaceDirection {
             userPoint += 1
+            history.append(true)
             SoundManager.shared.playSound(name: "correct")
         } else {
             userHP -= 1
+            history.append(false)
             SoundManager.shared.playSound(name: "incorrect")
         }
         if userHP > 0 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
                 self?.match()
             }
         } else {
@@ -104,6 +119,7 @@ class AppState {
         userHP = 5
         matchNumber = 0
         userPoint = 0
+        history = []
         match()
     }
 

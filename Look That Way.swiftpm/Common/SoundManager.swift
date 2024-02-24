@@ -37,11 +37,13 @@ class SoundManager {
         }
     }
 
-    func playGameBGM() {
+    func playGameBGM(rate: Float = 1.0) {
         if let bgmAsset = NSDataAsset(name: "sakurasakura") {
             do {
                 bgmPlayer?.stop()
                 bgmPlayer = try AVAudioPlayer(data: bgmAsset.data)
+                bgmPlayer?.enableRate = true
+                bgmPlayer?.rate = rate
                 bgmPlayer?.numberOfLoops = -1
                 bgmPlayer?.volume = 0.05
                 bgmPlayer?.play()

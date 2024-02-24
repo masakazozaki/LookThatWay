@@ -64,7 +64,7 @@ class FaceOverlayView: UIView, ARSCNViewDelegate {
         configuration.isLightEstimationEnabled = true
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
 
-        maskImage = UIImage(named: "back")!
+        maskImage = UIImage(named: "facemask_stroke")!
     }
 
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {

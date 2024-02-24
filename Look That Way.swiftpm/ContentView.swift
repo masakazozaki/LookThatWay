@@ -37,12 +37,27 @@ struct ContentView: View {
                 CountdownGauge(countDown: countdown)
             }
             HStack {
-                FaceView(appState: appState, cpuIndex: 0)
-                FaceView(appState: appState, cpuIndex: 1)
-                FaceView(appState: appState, cpuIndex: 2)
-                FaceView(appState: appState, cpuIndex: 3)
-                FaceView(appState: appState, cpuIndex: 4)
-            }
+                ZStack {
+                    FaceView(appState: appState, cpuIndex: 0)
+                    AnimatedCircleView(appState: appState, cpuIndex: 0)
+                }
+                ZStack {
+                    FaceView(appState: appState, cpuIndex: 1)
+                    AnimatedCircleView(appState: appState, cpuIndex: 1)
+                }
+                ZStack {
+                    FaceView(appState: appState, cpuIndex: 2)
+                    AnimatedCircleView(appState: appState, cpuIndex: 2)
+                }
+                ZStack {
+                    FaceView(appState: appState, cpuIndex: 3)
+                    AnimatedCircleView(appState: appState, cpuIndex: 3)
+                }
+                ZStack {
+                    FaceView(appState: appState, cpuIndex: 4)
+                    AnimatedCircleView(appState: appState, cpuIndex: 4)
+                }
+            }.frame(height: 200)
             Text("\(appState.matchNumber)")
                 .font(.largeTitle)
                 .bold()
@@ -59,7 +74,6 @@ struct ContentView: View {
                 Button {
                     appState.resetAndStart()
                     SoundManager.shared.playSound(name: "start")
-                    SoundManager.shared.playGameBGM()
                 } label : {
                     Text("Start")
                         .font(.largeTitle)
@@ -78,12 +92,19 @@ struct ContentView: View {
         }
         .onChange(of: appState.userHP) {
             if appState.userHP == 0 {
-                isPresentingResultView = true
-                SoundManager.shared.playInitialBGM()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    isPresentingResultView = true
+                    SoundManager.shared.playInitialBGM()
+                }
             }
         }
         .sheet(isPresented: $isPresentingResultView) {
             ResultView(appState: appState)
+        }
+        .background {
+            Image("cloud_bg")
+                .resizable()
+                .scaledToFill()
         }
     }
 }
