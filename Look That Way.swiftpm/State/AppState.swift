@@ -30,10 +30,28 @@ class AppState {
         }
     }
 
+    var recognizeTimer: CountdownTimer = CountdownTimer(duration: 0.3)
+
 //: MARK: - FaceOverlayState
     var shouldSetInitialFaceAngle = false
     var faceDetected = false
-    var userCurrentFaceDirection: FaceDirection = .front
+    var userCurrentFaceDirection: FaceDirection = .front {
+        didSet {
+            recognizeTimer = CountdownTimer(duration: 0.6)
+            print("set Reco Timer")
+            if isMatching {
+                if targetFaceDirection == userCurrentFaceDirection {
+                    print("Start Reco timer")
+                    recognizeTimer.onFinish = { [weak self] in
+                        print("End Reco TImer")
+                        self?.countdown?.end()
+                    }
+                    recognizeTimer.start()
+                }
+            }
+
+        }
+    }
     var targetMatchDuration = 3.0
     private func match() {
         if history.isEmpty {
@@ -56,7 +74,7 @@ class AppState {
         isMatching = true
         SoundManager.shared.playSound(name: "next")
         var cpuDirections: [FaceDirection]
-        switch userPoint {
+        switch history.count {
         case 0:
             //easy
             cpuDirections = [.down, .down, .up, .down, .down]

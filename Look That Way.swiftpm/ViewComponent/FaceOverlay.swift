@@ -113,22 +113,32 @@ class FaceOverlayView: UIView, ARSCNViewDelegate {
         if abs(deltaYaw) > abs(deltaPitch) {
             // Yawの変化が大きい場合
             if deltaYaw > 0.2 {
-                appState.userCurrentFaceDirection = .left
+                if appState.userCurrentFaceDirection != .left {
+                    appState.userCurrentFaceDirection = .left
+                }
             } else if deltaYaw < -0.2 {
-                appState.userCurrentFaceDirection = .right
+                if appState.userCurrentFaceDirection != .right {
+                    appState.userCurrentFaceDirection = .right
+                }
             }
         } else {
             // Pitchの変化が大きい場合
             if deltaPitch > 0.2 {
-                appState.userCurrentFaceDirection = .up
+                if appState.userCurrentFaceDirection != .up {
+                    appState.userCurrentFaceDirection = .up
+                }
             } else if deltaPitch < -0.2 {
-                appState.userCurrentFaceDirection = .down
+                if appState.userCurrentFaceDirection != .down {
+                    appState.userCurrentFaceDirection = .down
+                }
             }
         }
 
         // どちらの変化も小さい場合は正面を向いていると判断
         if abs(deltaYaw) <= 0.2 && abs(deltaPitch) <= 0.2 {
-            appState.userCurrentFaceDirection = .front
+            if appState.userCurrentFaceDirection != .front {
+                appState.userCurrentFaceDirection = .front
+            }
         }
     }
 

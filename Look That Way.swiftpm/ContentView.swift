@@ -79,11 +79,12 @@ struct ContentView: View {
                     FaceView(appState: appState, cpuIndex: 4)
                     AnimatedCircleView(appState: appState, cpuIndex: 4)
                 }
-            }.frame(height: 200)
+            }
+            .frame(height: 150)
             HStack {
                 Text("Target Number →")
                     .calligraphyFont(size: 24)
-                Text("\(appState.matchNumber)")
+                Text("\"\(appState.matchNumber)\"")
                     .calligraphyFont(size: 56)
                     .bold()
                 Text("Target Number →")
@@ -132,7 +133,7 @@ struct ContentView: View {
             ResultView(appState: appState)
         }
         .background {
-            Image("cloud_bg")
+            Image("game_bg")
                 .resizable()
                 .scaledToFill()
         }
