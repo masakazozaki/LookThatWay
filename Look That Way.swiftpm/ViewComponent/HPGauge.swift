@@ -14,6 +14,7 @@ struct HPGauge: View {
             ForEach(0..<hp, id: \.self) { _ in
                 Image(systemName: "heart.fill")
                     .foregroundStyle(.pink)
+                    .symbolEffect(.bounce, value: hp)
             }
         }
     }

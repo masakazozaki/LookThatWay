@@ -13,28 +13,50 @@ struct ContentView: View {
                         Spacer()
                         FaceOverlay(appState: appState)
                             .aspectRatio(1, contentMode: .fit)
-                            .ignoresSafeArea()
                         Spacer()
                     }
                     HStack {
+                        VStack(alignment: .leading) {
+                            Text("Look that way !")
+                                .calligraphyFont(size: 48)
+                            Text("あっち向いてホイ!")
+                                .calligraphyFont(size: 32)
+
+                        }
                         Spacer()
                         Button {
                             appState.shouldSetInitialFaceAngle = true
                         } label: {
                             Text("Re-Center")
-                                .font(.headline)
+                                .calligraphyFont(size: 32)
                                 .foregroundStyle(.white)
                                 .padding()
                                 .background(.cyan)
                                 .clipShape(RoundedRectangle(cornerRadius: 24))
                         }
                     }
+                    .padding()
                 }
 
             }
-            FaceView(appState: appState, cpuIndex: 5)
+            HStack {
+                Text("Your Face Direction →")
+                    .calligraphyFont(size: 24)
+                FaceView(appState: appState, cpuIndex: 5)
+                    .aspectRatio(1, contentMode: .fit)
+                    .padding()
+                    .background {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(style: StrokeStyle(lineWidth: 4))
+                    }
+                Text("Your Face Direction →")
+                    .calligraphyFont(size: 24)
+                    .opacity(0)
+            }
+
             if let countdown = appState.countdown {
                 CountdownGauge(countDown: countdown)
+                    .frame(height: 40)
             }
             HStack {
                 ZStack {
@@ -58,25 +80,33 @@ struct ContentView: View {
                     AnimatedCircleView(appState: appState, cpuIndex: 4)
                 }
             }.frame(height: 200)
-            Text("\(appState.matchNumber)")
-                .font(.largeTitle)
-                .bold()
+            HStack {
+                Text("Target Number →")
+                    .calligraphyFont(size: 24)
+                Text("\(appState.matchNumber)")
+                    .calligraphyFont(size: 56)
+                    .bold()
+                Text("Target Number →")
+                    .calligraphyFont(size: 24)
+                    .opacity(0)
+            }
+
             ZStack {
                 HStack {
-                    Text("HP \(appState.userHP)")
-                        .font(.headline)
+                    Text("HP: \(appState.userHP)")
                     HPGauge(hp: appState.userHP)
                     Spacer()
                     Text("Point: \(appState.userPoint)")
-                        .font(.headline)
+
                 }
+                .calligraphyFont(size: 32)
                 .padding()
                 Button {
                     appState.resetAndStart()
                     SoundManager.shared.playSound(name: "start")
                 } label : {
                     Text("Start")
-                        .font(.largeTitle)
+                        .calligraphyFont(size: 40)
                         .foregroundStyle(.white)
                         .padding()
                         .background(.green)
