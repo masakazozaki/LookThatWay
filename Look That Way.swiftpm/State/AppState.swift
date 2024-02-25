@@ -14,7 +14,7 @@ class AppState {
     var cpuMaskImage: UIImage = .init()
     var matchNumber: Int = 0
     var targetFaceDirection: FaceDirection = .front
-
+    var isPlaying = false
     var isMatching = false
     var history = [Bool]()
 
@@ -69,7 +69,7 @@ class AppState {
             SoundManager.shared.playGameBGM(rate: 3.0)
             targetMatchDuration = 1.2
         }
-
+        isPlaying = true
         isMatching = true
         SoundManager.shared.playSound(name: "next")
         var cpuDirections: [FaceDirection]
@@ -140,10 +140,12 @@ class AppState {
             }
         } else {
             SoundManager.shared.playSound(name: "result")
+            isPlaying = false
         }
     }
 
     func resetAndStart() {
+        isPlaying = true
         userHP = 5
         matchNumber = 0
         userPoint = 0

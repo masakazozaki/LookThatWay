@@ -134,11 +134,11 @@ struct ContentView: View {
                 Button {
                     showingAlert = true
                 } label : {
-                    Text("Start")
+                    Text(appState.isPlaying ? "Restart" : "Start")
                         .calligraphyFont(size: 40)
                         .foregroundStyle(.white)
-                        .padding()
-                        .background(.green)
+                        .padding(8)
+                        .background(appState.isPlaying ? .orange : .green)
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                 }
             }
