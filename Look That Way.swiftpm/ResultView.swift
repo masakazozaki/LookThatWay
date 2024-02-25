@@ -12,7 +12,7 @@ struct ResultView: View {
     var appState: AppState
     var body: some View {
         VStack {
-            Spacer()
+            Spacer(minLength: 40)
             Text("YOUR POINT")
                 .calligraphyFont(size: 24)
             Text("\(appState.userPoint)")
@@ -21,8 +21,7 @@ struct ResultView: View {
                 .aspectRatio(1, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .shadow(color: .cyan, radius: 24)
-                .frame(width: 300)
-            Spacer()
+            Spacer(minLength: 40)
             Button {
                 dismiss()
             } label: {
@@ -35,7 +34,7 @@ struct ResultView: View {
                             .fill(Color.indigo)
                     }
             }
-            Spacer()
+            Spacer(minLength: 40)
         }
         .background {
             Image("game_bg")
