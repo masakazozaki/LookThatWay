@@ -108,10 +108,13 @@ class AppState {
     }
 
     private func findUniqueCombination(in counts: [FaceDirection: Int]) -> (FaceDirection, Int) {
-        let uniqueCounts = counts.filter { entry1 in counts.filter { $0.value == entry1.value }.count == 1 }
-        let randomUnique = uniqueCounts.randomElement()!
-        return (randomUnique.key, randomUnique.value)
+        let frequencyMap = counts.values.reduce(into: [:]) { $0[$1, default: 0] += 1 }
+        let uniqueCounts = counts.filter { frequencyMap[$0.value] == 1 }
+        //5個から選ぶので必ず存在するのでforce-unwrap
+        let randomPick = uniqueCounts.randomElement()!
+        return (randomPick.key, randomPick.value)
     }
+
 
     private func findTargetFaceDirection(_ directions: [FaceDirection]) -> (FaceDirection, Int) {
         let counts = countOccurrences(of: directions)
