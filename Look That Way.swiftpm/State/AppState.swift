@@ -18,8 +18,7 @@ class AppState {
     var isMatching = false
     var history = [Bool]()
 
-    var countdown: CountdownTimer?
-
+    var countdown: CountdownTimer = CountdownTimer(duration: 3)
     var userPoint: Int = 0
     var userMaskImage: UIImage = .init()
     var userDrawing:Bool = false {
@@ -44,16 +43,16 @@ class AppState {
                     print("Start Reco timer")
                     recognizeTimer.onFinish = { [weak self] in
                         print("End Reco TImer")
-                        self?.countdown?.end()
+                        self?.countdown.end()
                     }
                     recognizeTimer.start()
                 }
             }
-
         }
     }
-    var targetMatchDuration = 3.0
+
     private func match() {
+        var targetMatchDuration = 3.0
         if history.isEmpty {
             SoundManager.shared.playGameBGM(rate: 1.0)
             targetMatchDuration = 4.0
@@ -95,11 +94,11 @@ class AppState {
         (targetFaceDirection, matchNumber) = findTargetFaceDirection(cpuDirections)
 
         countdown = CountdownTimer(duration: targetMatchDuration)
-        countdown?.onFinish = { [weak self] in
+        countdown.onFinish = { [weak self] in
             self?.judge()
         }
         cpuFaceDirections = cpuDirections
-        countdown?.start()
+        countdown.start()
     }
 
     private func countOccurrences(of directions: [FaceDirection]) -> [FaceDirection: Int] {

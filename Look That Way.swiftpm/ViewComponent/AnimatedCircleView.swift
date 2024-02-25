@@ -24,10 +24,9 @@ struct AnimatedCircleView: View {
             .trim(from: 0, to: isShowing ? 1 : 0)
             .stroke(color, lineWidth: 8)
             .shadow(color: color,radius: 2)
-            .frame(width: 200, height: 200)
             .rotationEffect(Angle(degrees: isShowing ? 360 : 0))
             .animation(Animation.easeOut(duration: 1), value: isShowing)
-            .onChange(of: appState.isMatching) { _ in
+            .onChange(of: appState.isMatching) {
                 guard appState.isMatching == false else { return }
                 if appState.targetFaceDirection == appState.cpuFaceDirections[cpuIndex] {
                     isShowing = true

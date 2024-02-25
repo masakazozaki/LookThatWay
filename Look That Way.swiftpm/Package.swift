@@ -20,7 +20,7 @@ let package = Package(
             teamIdentifier: "7R974FN29R",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .mic),
+            appIcon: .placeholder(icon: .smiley),
             accentColor: .presetColor(.teal),
             supportedDeviceFamilies: [
                 .pad
@@ -31,7 +31,8 @@ let package = Package(
             ],
             capabilities: [
                 .camera(purposeString: "Use camera to mapping your face.")
-            ]
+            ],
+            appCategory: .arcadeGames
         )
     ],
     targets: [
