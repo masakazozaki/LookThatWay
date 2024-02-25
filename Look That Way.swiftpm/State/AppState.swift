@@ -151,6 +151,7 @@ class AppState {
         matchNumber = 0
         userPoint = 0
         history = []
+        faceMaskImage = UIImage(named: "facemask_stroke")
         match()
     }
 
