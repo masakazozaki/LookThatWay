@@ -43,16 +43,17 @@ class AppState {
                     print("Start Reco timer")
                     recognizeTimer.onFinish = { [weak self] in
                         print("End Reco TImer")
-                        self?.countdown.end()
+                        if self?.isMatching == true {
+                            self?.countdown.end()
+                        }
                     }
                     recognizeTimer.start()
                 }
             }
         }
     }
-
+    var targetMatchDuration = 3.0
     private func match() {
-        var targetMatchDuration = 3.0
         if history.isEmpty {
             SoundManager.shared.playGameBGM(rate: 1.0)
             targetMatchDuration = 4.0
@@ -61,13 +62,13 @@ class AppState {
             targetMatchDuration = 3.0
         } else if userPoint == 6 {
             SoundManager.shared.playGameBGM(rate: 2.0)
-            targetMatchDuration = 2.0
+            targetMatchDuration = 2.5
         } else if userPoint == 10 {
             SoundManager.shared.playGameBGM(rate: 2.5)
-            targetMatchDuration = 1.6
+            targetMatchDuration = 2.0
         } else if userPoint == 15 {
             SoundManager.shared.playGameBGM(rate: 3.0)
-            targetMatchDuration = 1.2
+            targetMatchDuration = 1.5
         }
         isPlaying = true
         isMatching = true
