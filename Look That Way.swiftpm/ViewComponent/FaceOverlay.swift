@@ -75,8 +75,6 @@ class FaceOverlayView: UIView, ARSCNViewDelegate {
 
         let faceGeometry = ARSCNFaceGeometry(device: device)
         faceNode = SCNNode(geometry: faceGeometry)
-        faceNode!.geometry!.firstMaterial!.diffuse.contents = maskImage
-        faceNode!.geometry!.firstMaterial!.lightingModel = .physicallyBased
         updateFaceNode(with: faceAnchor)
 
         return faceNode
@@ -101,6 +99,8 @@ class FaceOverlayView: UIView, ARSCNViewDelegate {
     private func updateFaceNode(with faceAnchor: ARFaceAnchor) {
         let faceGeometry = faceNode?.geometry as? ARSCNFaceGeometry
         faceGeometry?.update(from: faceAnchor.geometry)
+        faceGeometry?.firstMaterial!.diffuse.contents = appState.faceMaskImage
+        faceGeometry?.firstMaterial!.lightingModel = .physicallyBased
     }
 
     func updateFaceDirection(faceAnchor: ARFaceAnchor) {

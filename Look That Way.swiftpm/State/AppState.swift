@@ -33,7 +33,7 @@ class AppState {
 
 //: MARK: - FaceOverlayState
     var shouldSetInitialFaceAngle = false
-    var faceDetected = false
+
     var userCurrentFaceDirection: FaceDirection = .front {
         didSet {
             recognizeTimer = CountdownTimer(duration: 0.6)
@@ -52,6 +52,7 @@ class AppState {
             }
         }
     }
+    var faceMaskImage = UIImage(named: "facemask_stroke")
     var targetMatchDuration = 3.0
     private func match() {
         if history.isEmpty {
@@ -116,12 +117,10 @@ class AppState {
         return (randomPick.key, randomPick.value)
     }
 
-
     private func findTargetFaceDirection(_ directions: [FaceDirection]) -> (FaceDirection, Int) {
         let counts = countOccurrences(of: directions)
         return findUniqueCombination(in: counts)
     }
-
 
     func judge() {
         print("judge")
@@ -131,6 +130,7 @@ class AppState {
             history.append(true)
             SoundManager.shared.playSound(name: "correct")
         } else {
+            faceMaskImage = faceMaskImage?.addRandomSticker()
             userHP -= 1
             history.append(false)
             SoundManager.shared.playSound(name: "incorrect")
