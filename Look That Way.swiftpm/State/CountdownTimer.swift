@@ -50,9 +50,14 @@ class CountdownTimer {
         timer?.invalidate()
     }
 
-    func end() {
+    func forceFinish() {
         timer?.invalidate()
         timer = nil
         onFinish?()
+    }
+
+    func invalidate() {
+        timer?.invalidate()
+        timer = nil
     }
 }

@@ -21,13 +21,6 @@ class AppState {
     var countdown: CountdownTimer = CountdownTimer(duration: 3)
     var userPoint: Int = 0
     var userMaskImage: UIImage = .init()
-    var userDrawing:Bool = false {
-        didSet {
-            if userDrawing == false {
-
-            }
-        }
-    }
 
     var recognizeTimer: CountdownTimer = CountdownTimer(duration: 0.3)
 
@@ -44,7 +37,7 @@ class AppState {
                     recognizeTimer.onFinish = { [weak self] in
                         print("End Reco TImer")
                         if self?.isMatching == true {
-                            self?.countdown.end()
+                            self?.countdown.forceFinish()
                         }
                     }
                     recognizeTimer.start()
@@ -152,14 +145,14 @@ class AppState {
         userPoint = 0
         history = []
         faceMaskImage = UIImage(named: "facemask_stroke")
+        shouldSetInitialFaceAngle = true
         match()
     }
 
-    func drawPencil() {
-        userDrawing = true
-    }
-
-    func placeStickerToUser() {
+    func end() {
+        isPlaying = false
+        countdown.invalidate()
+        userHP = 0
 
     }
 }

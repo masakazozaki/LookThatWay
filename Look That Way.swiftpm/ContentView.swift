@@ -3,50 +3,53 @@ import SwiftUI
 struct ContentView: View {
     var appState: AppState
     @State var isPresentingResultView = false
+    @State var isPresentingTutorialView = false
     @State private var canvasImage: UIImage?
     @State private var tmpHighlighted = false
-    @State private var showingAlert = false
     var body: some View {
         VStack {
-            GeometryReader { proxy in
+            ZStack {
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Look that way !")
                             .calligraphyFont(size: 48)
                         Text("あっち向いてホイ!")
                             .calligraphyFont(size: 32)
-                        Text("Let's face the direction that matches the number of computers facing it, as indicated by the target number!")
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .font(.title2)
-                            .bold()
+                        Spacer()
                     }
-                    .frame(width: proxy.size.width / 2 - 75)
-                    .frame(maxHeight: .infinity)
+                    Spacer()
+                    Button {
+                        isPresentingTutorialView = true
+                    } label: {
+                        Text("?")
+                            .calligraphyFont(size: 24)
+                            .foregroundStyle(.white)
+                            .padding(8)
+                            .background {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.teal)
+                                    .aspectRatio(1, contentMode: .fill)
+                            }
+                    }
+                }
+                HStack {
+                    Spacer()
                     FaceOverlay(appState: appState)
                         .aspectRatio(1, contentMode: .fit)
                         .frame(width: 150)
-                    VStack {
-                        Text("For better face tracking, remove your \(Image(systemName: "facemask")) and \(Image(systemName: "visionpro")).")
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .font(.headline)
-                        Spacer()
-                        Text("Before starting the game, place your iPad in front of you, tap \"Re-center\" to perform calibration, and ensure it accurately recognizes the direction of your face.")
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .font(.headline)
-                    }
-                    .frame(width: proxy.size.width / 2 - 75)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    Spacer()
                 }
+
             }
+            .frame(maxWidth: .infinity)
             .padding()
             VStack(spacing: 4) {
                 ZStack {
                     HStack {
                         Spacer()
                         VStack {
-                            Text("Your Face Direction")
+                            Text("Detected Your Face Direction")
                                 .calligraphyFont(size: 24)
                             FaceView(appState: appState, cpuIndex: 5)
                                 .aspectRatio(1, contentMode: .fit)
@@ -112,7 +115,7 @@ struct ContentView: View {
             .padding()
             .frame(height: 150)
             Group {
-                Text("Target Number")
+                Text("Target number of faces")
                     .calligraphyFont(size: 24)
                 Text("\"\(appState.matchNumber)\"")
                     .calligraphyFont(size: 56)
@@ -131,20 +134,37 @@ struct ContentView: View {
                 }
                 .calligraphyFont(size: 32)
                 .padding()
-                Button {
-                    showingAlert = true
-                } label : {
-                    Text(appState.isPlaying ? "Restart" : "Start")
-                        .calligraphyFont(size: 40)
-                        .foregroundStyle(.white)
-                        .padding(8)
-                        .background(appState.isPlaying ? .orange : .green)
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                HStack {
+                    Button {
+                        appState.resetAndStart()
+                    } label: {
+                        Text(appState.isPlaying ? "Restart" : "Start")
+                            .calligraphyFont(size: 40)
+                            .foregroundStyle(.white)
+                            .padding(8)
+                            .background(appState.isPlaying ? .orange : .green)
+                            .clipShape(RoundedRectangle(cornerRadius: 24))
+                    }
+
+                    if appState.isPlaying {
+                        Button {
+                            appState.end()
+                        } label: {
+                            Text("End")
+                                .calligraphyFont(size: 40)
+                                .foregroundStyle(.white)
+                                .padding(8)
+                                .background(.red)
+                                .clipShape(RoundedRectangle(cornerRadius: 24))
+                        }
+                    }
                 }
+
             }
         }
         .onAppear {
             SoundManager.shared.playInitialBGM()
+            isPresentingTutorialView = true
         }
         .onDisappear {
             SoundManager.shared.stopBGM()
@@ -160,23 +180,13 @@ struct ContentView: View {
         .sheet(isPresented: $isPresentingResultView) {
             ResultView(appState: appState)
         }
+        .sheet(isPresented: $isPresentingTutorialView) {
+            TutorialView(appState: appState)
+        }
         .background {
             Image("game_bg")
                 .resizable()
                 .scaledToFill()
-        }
-        .alert(isPresented: $showingAlert) {
-            Alert(
-                title: Text("Face Recognition Comfirmation"),
-                message: Text("Is your face direction correctly recognized?"),
-                primaryButton: .default(Text("Yes!")) {
-                    appState.resetAndStart()
-                    SoundManager.shared.playSound(name: "start")
-                },
-                secondaryButton: .cancel(Text("Not yet.")) {
-
-                }
-            )
         }
     }
 }
